@@ -1,0 +1,13 @@
+---
+- name: Wait hosts are reachable
+  import_playbook: wait_reachable.yml
+
+- name: Prepare hosts
+  import_playbook: prepare.yml
+
+- name: Docker install and configure
+  import_playbook: docker.yml
+
+- name: Gitlab runner install and configure
+  import_playbook: gitlab_runner.yml
+...

@@ -1,0 +1,23 @@
+---
+# Gitlab runner variables
+gitlab_runner_container_install: true
+gitlab_runner_container_image: gitlab/gitlab-runner
+gitlab_runner_container_tag: latest
+gitlab_runner_container_name: gitlab-runner
+gitlab_runner_container_mount_path: /etc/gitlab-runner
+gitlab_runner_coordinator_url: "{{ lookup('env', 'GITLAB_URL') }}"
+gitlab_runner_reg_token: "{{ lookup('env', 'GITLAB_REG_TOKEN') }}"
+gitlab_runner_runners:
+  - name: Terraform / Ansible GitLab Runner
+    token: '{{ gitlab_runner_reg_token }}'
+    executor: docker
+    docker_image: 'alpine'
+    docker_pull_policy: ['if-not-present']
+    tags:
+      - common-docker
+    docker_volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    extra_configs:
+      runners.docker:
+        memory: 2gb
+...

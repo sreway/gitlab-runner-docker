@@ -1,0 +1,9 @@
+---
+- hosts: new_instance:!default
+  vars:
+    ansible_ssh_user: "{{ sudo_users |  map(attribute='username') | random }}"  
+  roles:
+    - role: gitlab-runner
+      become: true
+      tags: gitlab-runner
+...

@@ -1,0 +1,12 @@
+---
+# Ansible docker role variables
+docker_install_compose: false
+docker_edition: 'ce'
+docker_packages:
+    - "docker-{{ docker_edition }}"
+    - "docker-{{ docker_edition }}-cli"
+docker_users: "{{ sudo_users |  map(attribute='username') }}"
+# Ansible pip role variables
+pip_install_packages:
+  - docker
+...

@@ -1,0 +1,17 @@
+---
+- hosts: new_instance:!default
+  vars:
+    ansible_ssh_user: "{{ sudo_users |  map(attribute='username') | random }}"  
+  roles:
+    - role: packages
+      become: true
+      tags: [docker, packages]
+
+    - role: pip
+      become: true
+      tags: [docker, pip]
+
+    - role: docker
+      become: true
+      tags: [docker]
+...
