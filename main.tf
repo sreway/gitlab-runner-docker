@@ -40,19 +40,20 @@ module "available_instances" {
 
 // Create instances
 module "instance" {
-  source                  = "git::https://github.com/sreway/terraform-selectel-modules.git//modules/vpc/instance"
-  for_each                = var.instances
-  instance_name           = each.value.name
-  instance_ram            = each.value.ram
-  instance_vcpus          = each.value.vcpus
-  instance_disk           = each.value.disk
-  instance_image          = each.value.image
-  instance_zone           = each.value.zone
-  instance_network_id     = module.internal_network[each.value.network_name].network_id
-  instance_subnet_id      = module.internal_network[each.value.network_name].subnet_id
-  instance_remote_volumes = each.value.remote_volumes
-  instance_tags           = each.value.tags
-  instance_key_pair_name  = var.sel_ssh_key_name
+  source                 = "git::https://github.com/sreway/terraform-selectel-modules.git//modules/vpc/instance"
+  for_each               = var.instances
+  instance_name          = each.value.name
+  instance_ram           = each.value.ram
+  instance_vcpus         = each.value.vcpus
+  instance_disk          = each.value.disk
+  instance_disk_remote   = each.value.disk_remote
+  instance_disk_type     = each.value.disk_type
+  instance_image         = each.value.image
+  instance_zone          = each.value.zone
+  instance_network_id    = module.internal_network[each.value.network_name].network_id
+  instance_subnet_id     = module.internal_network[each.value.network_name].subnet_id
+  instance_tags          = each.value.tags
+  instance_key_pair_name = var.sel_ssh_key_name
 
   depends_on = [
     module.internal_network
@@ -104,7 +105,7 @@ resource "null_resource" "deploy_inventory" {
   }
   provisioner "local-exec" {
     working_dir = "${path.module}/ansible"
-    command = <<-EOT
+    command     = <<-EOT
       ansible-galaxy role install -r requirements.yml -p roles --force
       ansible-playbook -i inventory/ site.yml
     EOT
@@ -122,7 +123,7 @@ resource "null_resource" "deploy_inventory" {
   provisioner "local-exec" {
     when        = destroy
     working_dir = "${path.module}/ansible"
-    command     = "ansible-playbook -i inventory/ cleanup.yml"
+    command     = "ansible-playbook -vvv -i inventory/ cleanup.yml"
     environment = {
       ANSIBLE_FORCE_COLOR = "1"
       SSH_USER            = "${self.triggers.local_var_ssh_user}"

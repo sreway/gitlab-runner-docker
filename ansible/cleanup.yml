@@ -7,4 +7,5 @@
       community.docker.docker_container_exec:
         container: '{{ gitlab_runner_container_name }}'
         command: /bin/bash -c "gitlab-runner unregister --all-runners"
+      become: true
 ...

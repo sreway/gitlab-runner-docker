@@ -72,19 +72,15 @@ variable "networks" {
 
 variable "instances" {
   type = map(object({
-    name         = string
-    vcpus        = number
-    ram          = number
-    disk         = number
-    image        = string
-    zone         = string
-    network_name = string
-    remote_volumes = map(object({
-      name = string
-      size = number
-      type = string
-      zone = string
-    }))
+    name               = string
+    vcpus              = number
+    ram                = number
+    disk               = number
+    disk_remote        = bool
+    disk_type          = string
+    image              = string
+    zone               = string
+    network_name       = string
     create_floating_ip = bool
     tags               = list(string)
   }))
@@ -92,13 +88,14 @@ variable "instances" {
   default = {
     "gitlab-runner-01" = {
       disk               = 40
+      disk_remote        = true
+      disk_type          = "basic"
       image              = "Ubuntu 22.04 LTS 64-bit"
       name               = "gitlab-runner-01"
       ram                = 4096
       vcpus              = 2
       zone               = "ru-7a"
       network_name       = "gitlab-runners-net"
-      remote_volumes     = {}
       create_floating_ip = true
       tags               = ["gitlab_runner", "docker", "preemptible"]
     },
